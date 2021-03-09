@@ -3,7 +3,10 @@
     "version": "1.0.0",
     "description": "nodejs home work",
     "main": "index.js",
-    "dependencies": {},
+    "dependencies": {
+        "uuidv4": "^6.2.6",
+        "yargs": "^16.2.0"
+    },
     "devDependencies": {
         "nodemon": "^2.0.7"
     },
