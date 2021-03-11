@@ -1,0 +1,32 @@
+{
+    "name": "goit-nodejs-hw",
+    "version": "1.0.0",
+    "description": "nodejs home work",
+    "main": "index.js",
+    "dependencies": {
+        "uuidv4": "^6.2.6",
+        "yargs": "^16.2.0"
+    },
+    "devDependencies": {
+        "nodemon": "^2.0.7"
+    },
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "node index.js",
+        "dev": "nodemon index.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/dramarec/goit-nodejs-hw.git"
+    },
+    "keywords": [
+        "nodejs",
+        "js"
+    ],
+    "author": "dramarec",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/dramarec/goit-nodejs-hw/issues"
+    },
+    "homepage": "https://github.com/dramarec/goit-nodejs-hw#readme"
+}
