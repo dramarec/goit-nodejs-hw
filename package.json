@@ -18,6 +18,11 @@
         "eslint-plugin-promise": "^4.2.1",
         "nodemon": "2.0.7"
     },
+    "nodemonConfig": {
+        "ignore": [
+            "data/*.*"
+        ]
+    },
     "scripts": {
         "start": "cross-env NODE_ENV=production node ./bin/server.js",
         "start:dev": "cross-env NODE_ENV=development nodemon ./bin/server.js",
