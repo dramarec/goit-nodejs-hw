@@ -18,6 +18,7 @@ const getAllContacts = (_, res, next) => {
 const getContactById = (req, res, next) => {
     try {
         const contact = contactsService.getContactById(req.params);
+        console.log('req.params :', req.params);
         if (contact) {
             return res.status(HttpCode.OK).json({
                 status: 'success',
@@ -49,10 +50,7 @@ const createContact = (req, res, next) => {
 };
 const updateContact = (req, res, next) => {
     try {
-        const contact = contactsService.updateContact(
-            req.params.contactId,
-            req.body,
-        );
+        const contact = contactsService.updateContact(req.params, req.body);
         if (contact) {
             return res.status(HttpCode.OK).json({
                 status: 'success',
@@ -72,10 +70,7 @@ const updateContact = (req, res, next) => {
 };
 const updateContactStatus = (req, res, next) => {
     try {
-        const contact = contactsService.updateContactStatus(
-            req.params,
-            req.body,
-        );
+        const contact = contactsService.updateContact(req.params, req.body);
         if (contact) {
             return res.status(HttpCode.OK).json({
                 status: 'success',
@@ -99,6 +94,7 @@ const removeContact = (req, res, next) => {
         if (contact) {
             return res.status(HttpCode.OK).json({
                 status: 'success',
+                message: 'Contact deleted',
                 code: HttpCode.OK,
                 data: { contact },
             });

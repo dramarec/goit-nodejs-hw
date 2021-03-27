@@ -1,23 +1,34 @@
+const { ContactsRepository } = require('../repository');
 class ContactsService {
-    constructor() {}
+    constructor() {
+        this.repsitories = {
+            contacts: new ContactsRepository(),
+        };
+    }
 
     getAllContacts() {
-        return {};
+        const data = this.repsitories.contacts.getAllContacts();
+        return data;
     }
-    getContactById({ id }) {
-        return {};
+    getContactById({ contactId }) {
+        const data = this.repsitories.contacts.getContactById(contactId);
+        return data;
     }
     createContact(body) {
-        return {};
+        console.log('body :', body);
+        const data = this.repsitories.contacts.createContact(body);
+        return data;
     }
-    updateContact({ id }, body) {
-        return {};
+    updateContact({ contactId }, body) {
+        const data = this.repsitories.contacts.updateContact(contactId, body);
+        return data;
     }
-    updateContactStatus({ id }, body) {
-        return {};
-    }
-    removeContact({ id }) {
-        return {};
+
+    removeContact({ contactId }) {
+        console.log('id :', id);
+
+        const data = this.repsitories.contacts.removeContact(contactId);
+        return data;
     }
 }
 
