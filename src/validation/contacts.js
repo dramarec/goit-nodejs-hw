@@ -23,6 +23,9 @@ const schemaUpdateContact = Joi.object({
         })
         .optional(),
     phone: Joi.string().min(7).max(20).optional(),
+    password: Joi.string().min(7).max(20).required(),
+    subscriptions: Joi.string().optional(),
+    token: Joi.string().optional(),
     done: Joi.boolean().optional(),
 });
 const schemaStatusContact = Joi.object({
