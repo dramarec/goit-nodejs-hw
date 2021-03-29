@@ -5,7 +5,13 @@ const HttpCode = {
     NOT_FOUND: 404,
     INTERNAL_SERVER_ERROR: 500,
 };
+const Subscriptions = {
+    free: 'free',
+    pro: 'pro',
+    premium: 'premium',
+};
 
 module.exports = {
     HttpCode,
+    Subscriptions,
 };

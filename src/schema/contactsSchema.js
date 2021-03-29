@@ -43,11 +43,15 @@ const contactSchema = new Schema(
         },
         token: {
             type: String,
-            default: '',
+            default: null,
         },
         done: {
             type: Boolean,
             default: false,
+        },
+        owner: {
+            type: mongoose.SchemaTypes.ObjectId,
+            ref: 'user',
         },
     },
     { versionKey: false, timestamps: true },
