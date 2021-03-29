@@ -6,28 +6,31 @@ class ContactsService {
         };
     }
 
-    getAllContacts() {
-        const data = this.repsitories.contacts.getAllContacts();
-        return data;
-    }
-    getContactById({ contactId }) {
-        const data = this.repsitories.contacts.getContactById(contactId);
-        return data;
-    }
-    createContact(body) {
-        console.log('body :', body);
-        const data = this.repsitories.contacts.createContact(body);
-        return data;
-    }
-    updateContact({ contactId }, body) {
-        const data = this.repsitories.contacts.updateContact(contactId, body);
+    async getAllContacts() {
+        const data = await this.repsitories.contacts.getAllContacts();
         return data;
     }
 
-    removeContact({ contactId }) {
-        console.log('id :', id);
+    async getContactById({ contactId }) {
+        const data = await this.repsitories.contacts.getContactById(contactId);
+        return data;
+    }
 
-        const data = this.repsitories.contacts.removeContact(contactId);
+    async createContact(body) {
+        const data = await this.repsitories.contacts.createContact(body);
+        return data;
+    }
+
+    async updateContact({ contactId }, body) {
+        const data = await this.repsitories.contacts.updateContact(
+            contactId,
+            body,
+        );
+        return data;
+    }
+
+    async removeContact({ contactId }) {
+        const data = await this.repsitories.contacts.removeContact(contactId);
         return data;
     }
 }
