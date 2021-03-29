@@ -1,33 +1,36 @@
-const mongoose = require('mongoose');
+const { Sequelize, DataTypes } = require('sequelize');
 
-require('dotenv').config();
+const sequelize = new Sequelize('sqlite:./data/contacts.db');
 
-const uriDb = process.env.URI_DB;
-
-const db = mongoose.connect(uriDb, {
-    useUnifiedTopology: true,
-    useCreateIndex: true,
-    useNewUrlParser: true,
-    useFindAndModify: false,
+sequelize.define('contact', {
+    name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    phone: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    email: {
+        type: DataTypes.STRING,
+    },
+    subscriptions: {
+        type: DataTypes.STRING,
+        defaultValue: 'free',
+    },
+    token: {
+        type: DataTypes.STRING,
+        defaultValue: '',
+    },
+    done: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+    },
 });
 
-mongoose.connection.on('connected', err => {
-    console.log(`Mongoose connected`);
-});
+sequelize.sync();
 
-mongoose.connection.on('error', err => {
-    console.log(`Mongoose connection error: ${err.message}`);
-});
-
-mongoose.connection.on('disconnected', err => {
-    console.log(`Mongoose disconnected`);
-});
-
-process.on('SIGINT', async () => {
-    mongoose.connection.close(() => {
-        console.log('Connection for DB disconnected and app terminated');
-        process.exit(1);
-    });
-});
-
-module.exports = db;
+module.exports = {
+    db: sequelize,
+    connect: sequelize.authenticate(),
+};
