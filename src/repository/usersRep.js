@@ -5,10 +5,6 @@ class UsersRepository {
         this.model = User;
     }
 
-    async findUserById(id) {
-        const result = await this.model.findOne({ _id: id });
-        return result;
-    }
     async findUserByEmail(email) {
         const result = await this.model.findOne({ email });
         return result;
@@ -21,6 +17,11 @@ class UsersRepository {
 
     async updateToken(id, token) {
         await this.model.updateOne({ _id: id }, { token });
+    }
+
+    async findUserById(id) {
+        const result = await this.model.findOne({ _id: id });
+        return result;
     }
 }
 

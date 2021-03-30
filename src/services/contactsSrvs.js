@@ -17,8 +17,11 @@ class ContactsService {
         return data;
     }
 
-    async createContact(body) {
-        const data = await this.repsitories.contacts.createContact(body);
+    async createContact(body, userId) {
+        const data = await this.repsitories.contacts.createContact(
+            body,
+            userId,
+        );
         return data;
     }
 
