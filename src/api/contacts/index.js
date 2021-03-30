@@ -1,11 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const controllerContacts = require('../../controllers/contacts');
+const controllerContacts = require('../../controllers/contactsCntrl');
 const {
     validateCreateContact,
     validateUpdateContact,
     validateUpdateStatusContact,
-} = require('../../validation/contacts');
+} = require('../../validation/contactsVldt');
+
 router
     .get('/', controllerContacts.getAllContacts)
     .get('/:contactId', controllerContacts.getContactById)
