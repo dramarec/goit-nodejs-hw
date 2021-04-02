@@ -7,47 +7,63 @@ class ContactsService {
         };
     }
 
-    // async getAllContacts(query) {
-    //     const data = await this.repsitories.contacts.getAllContacts(query);
-    //     const {
-    //         docs: contacts,
-    //         totalDocs: total,
-    //         limit,
-    //         page,
-    //         totalPages,
-    //     } = data;
-    //     return { contacts, total, totalPages, limit, page };
-    // }
-    async getAllContactsSrv(query) {
-        console.log('getAllContactsSrv query :', query);
-        const data = await this.repsitories.contacts.getAllContactsRep(query);
-        console.log('getAllContactsSrv data :', data);
-        return data;
-    }
-
-    async getContactById({ contactId }) {
-        const data = await this.repsitories.contacts.getContactById(contactId);
-        return data;
-    }
-
-    async createContact(body, userId) {
-        const data = await this.repsitories.contacts.createContact(
-            body,
+    async getAllContactsSrv(userId, query) {
+        // console.log('query :', query);
+        const data = await this.repsitories.contacts.getAllContactsRep(
             userId,
+            query,
+        );
+        const {
+            page,
+            totalPages,
+            limit,
+            offset,
+            totalDocs: totalContacts,
+            docs: contacts,
+        } = data;
+
+        console.log('ContactsService -> getAllContactsSrv -> data', contacts);
+
+        return {
+            page: Number(page),
+            totalPages,
+            limit: Number(limit),
+            offset: Number(offset),
+            totalContacts,
+            contacts,
+        };
+    }
+
+    async getContactById(userId, { contactId }) {
+        const data = await this.repsitories.contacts.getContactById(
+            userId,
+            contactId,
         );
         return data;
     }
 
-    async updateContact({ contactId }, body) {
+    async createContact(userId, body) {
+        const data = await this.repsitories.contacts.createContact(
+            userId,
+            body,
+        );
+        return data;
+    }
+
+    async updateContact(userId, { contactId }, body) {
         const data = await this.repsitories.contacts.updateContact(
+            userId,
             contactId,
             body,
         );
         return data;
     }
 
-    async removeContact({ contactId }) {
-        const data = await this.repsitories.contacts.removeContact(contactId);
+    async removeContact(userId, { contactId }) {
+        const data = await this.repsitories.contacts.removeContact(
+            userId,
+            contactId,
+        );
         return data;
     }
 }

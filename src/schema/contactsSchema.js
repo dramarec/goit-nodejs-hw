@@ -28,24 +28,24 @@ const contactSchema = new Schema(
             },
             unique: true,
         },
-        subscriptions: {
-            type: String,
-            // required: [true, 'Subscription is required'],
-            minlength: 3,
-            maxlength: 8,
-            enum: ['free', 'pro', 'premium'],
-            default: 'free',
-        },
-        password: {
-            type: String,
-            required: [true, 'Password is required'],
-            minlength: 6,
-            maxlength: 20,
-        },
-        token: {
-            type: String,
-            default: null,
-        },
+        // subscriptions: {
+        //     type: String,
+        //     // required: [true, 'Subscription is required'],
+        //     minlength: 3,
+        //     maxlength: 8,
+        //     enum: ['free', 'pro', 'premium'],
+        //     default: 'free',
+        // },
+        // password: {
+        //     type: String,
+        //     required: [true, 'Password is required'],
+        //     minlength: 6,
+        //     maxlength: 20,
+        // },
+        // token: {
+        //     type: String,
+        //     default: null,
+        // },
         done: {
             type: Boolean,
             default: false,

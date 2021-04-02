@@ -9,7 +9,7 @@ const {
 const guard = require('../../helpers/guard');
 
 router
-    .get('/', guard, controllerContacts.getAllContacts)
+    .get('/', guard, controllerContacts.getAllContactsCntrl)
     .get('/:contactId', guard, controllerContacts.getContactById)
     .post('/', guard, validateCreateContact, controllerContacts.createContact)
     .put(

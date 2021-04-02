@@ -9,9 +9,9 @@ const schemaCreateContact = Joi.object({
         })
         .required(),
     phone: Joi.string().min(7).max(20).required(),
-    password: Joi.string().min(7).max(20).optional(),
-    subscriptions: Joi.string().min(3).max(10).optional(),
-    token: Joi.string().optional(),
+    // password: Joi.string().min(7).max(20).optional(),
+    // subscriptions: Joi.string().min(3).max(10).optional(),
+    // token: Joi.string().optional(),
     done: Joi.boolean().optional(),
 });
 
@@ -23,9 +23,9 @@ const schemaUpdateContact = Joi.object({
         })
         .optional(),
     phone: Joi.string().min(7).max(20).optional(),
-    password: Joi.string().min(7).max(20).optional(),
-    subscriptions: Joi.string().min(3).max(10).optional(),
-    token: Joi.string().optional(),
+    // password: Joi.string().min(7).max(20).optional(),
+    // subscriptions: Joi.string().min(3).max(10).optional(),
+    // token: Joi.string().optional(),
     done: Joi.boolean().optional(),
 });
 const schemaStatusContact = Joi.object({

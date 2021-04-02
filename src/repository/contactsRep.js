@@ -4,16 +4,12 @@ class ContactsRepository {
         this.model = Contact;
     }
 
-    async getAllContactsRep({
-        limit = 2,
-        offset = 0,
-        page = 1,
-        sortBy,
-        sortByDesc,
-    }) {
-        // console.log('limit, offset, page', limit, offset, page);
-        const { docs: contacts, totalDocs: total } = await this.model.paginate(
-            {},
+    async getAllContactsRep(
+        userId,
+        { limit = 5, offset = 0, page = 1, sortBy, sortByDesc, filter },
+    ) {
+        const result = await this.model.paginate(
+            { owner: userId },
             {
                 limit,
                 offset,
@@ -22,38 +18,43 @@ class ContactsRepository {
                     ...(sortBy ? { [`${sortBy}`]: 1 } : {}),
                     ...(sortByDesc ? { [`${sortByDesc}`]: -1 } : {}),
                 },
+                select: filter ? filter.split('|').join(' ') : '',
+                populate: {
+                    path: 'owner',
+                    select: 'name email subscriptions -_id',
+                },
             },
         );
-        return {
-            page,
-            limit: Number(limit),
-            offset: Number(offset),
-            total,
-            contacts,
-        };
-    }
-
-    async getContactById(id) {
-        const result = await this.model.findOne({ _id: id });
         return result;
     }
 
-    async createContact(body, userId) {
+    async getContactById(userId, id) {
+        const result = await this.model
+            .findOne({ _id: id, owner: userId })
+            .populate({
+                path: 'owner',
+                select: 'subscriptions name email -_id',
+            });
+        return result;
+    }
+
+    async createContact(userId, body) {
         const result = await this.model.create({ ...body, owner: userId });
         return result;
     }
-    async updateContact(id, body) {
+    async updateContact(userId, id, body) {
         const result = await this.model.findByIdAndUpdate(
-            { _id: id },
+            { _id: id, owner: userId },
             { ...body },
             { new: true },
         );
         return result;
     }
 
-    async removeContact(id) {
+    async removeContact(userId, id) {
         const result = await this.model.findByIdAndRemove({
             _id: id,
+            owner: userId,
         });
         return result;
     }

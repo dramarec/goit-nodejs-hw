@@ -5,6 +5,14 @@ const { Schema } = mongoose;
 
 const userSchema = new Schema(
     {
+        subscriptions: {
+            type: String,
+            enum: {
+                values: ['free', 'pro', 'premium'],
+                message: "This gender isn't allowed",
+            },
+            default: 'free',
+        },
         name: {
             type: String,
             default: 'Guest',
@@ -16,14 +24,6 @@ const userSchema = new Schema(
             required: [true, 'Password is required'],
             minlength: 3,
             maxlength: 20,
-        },
-        subscriptions: {
-            type: String,
-            enum: {
-                values: ['free', 'pro', 'premium'],
-                message: "This gender isn't allowed",
-            },
-            default: 'free',
         },
         token: {
             type: String,
