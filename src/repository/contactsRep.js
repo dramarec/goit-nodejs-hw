@@ -4,9 +4,33 @@ class ContactsRepository {
         this.model = Contact;
     }
 
-    async getAllContacts() {
-        const results = await this.model.find();
-        return results;
+    async getAllContactsRep({
+        limit = 2,
+        offset = 0,
+        page = 1,
+        sortBy,
+        sortByDesc,
+    }) {
+        // console.log('limit, offset, page', limit, offset, page);
+        const { docs: contacts, totalDocs: total } = await this.model.paginate(
+            {},
+            {
+                limit,
+                offset,
+                page,
+                sort: {
+                    ...(sortBy ? { [`${sortBy}`]: 1 } : {}),
+                    ...(sortByDesc ? { [`${sortByDesc}`]: -1 } : {}),
+                },
+            },
+        );
+        return {
+            page,
+            limit: Number(limit),
+            offset: Number(offset),
+            total,
+            contacts,
+        };
     }
 
     async getContactById(id) {

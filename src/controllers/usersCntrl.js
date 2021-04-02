@@ -36,6 +36,7 @@ const registration = async (req, res, next) => {
         next(err);
     }
 };
+
 const login = async (req, res, next) => {
     const { email, password } = req.body;
     try {
@@ -58,9 +59,10 @@ const login = async (req, res, next) => {
         next(err);
     }
 };
+
 const logout = async (req, res, next) => {
     const id = req.user.id;
-    await authService.logout(id);
+    await serviceAuth.logout(id);
     return res.status(HttpCode.NO_CONTENT).json({
         status: 'success',
         code: HttpCode.NO_CONTENT,

@@ -3,13 +3,18 @@ const { ContactsService } = require('../services');
 
 const contactsService = new ContactsService();
 
-const getAllContacts = async (_, res, next) => {
+const getAllContacts = async (req, res, next) => {
     try {
-        const contacts = await contactsService.getAllContacts();
+        // const userId = req.user.id;
+        console.log('getAllContacts req.query :', req.query);
+        const contacts = await contactsService.getAllContactsSrv(
+            // userId,
+            req.query,
+        );
         res.status(HttpCode.OK).json({
             status: 'success',
             code: HttpCode.OK,
-            data: { contacts },
+            data: { ...contacts },
         });
     } catch (err) {
         next(err);
@@ -18,7 +23,7 @@ const getAllContacts = async (_, res, next) => {
 const getContactById = async (req, res, next) => {
     try {
         const contact = await contactsService.getContactById(req.params);
-        console.log('req.params :', req.params);
+        // console.log('req.params :', req.params);
         if (contact) {
             return res.status(HttpCode.OK).json({
                 status: 'success',
