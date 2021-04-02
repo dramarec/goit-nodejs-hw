@@ -21,7 +21,7 @@ const schemaUpdateUser = Joi.object({
             tlds: { allow: ['com', 'net', 'ua', 'ru'] },
         })
         .optional(),
-    subscription: Joi.string().valid('free', 'pro', 'premium').optional(),
+    subscription: Joi.string().valid('free', 'pro', 'premium').required(),
 });
 
 const validate = (schema, body, next) => {
