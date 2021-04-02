@@ -2,24 +2,29 @@ const { UsersRepository } = require('../repository');
 
 class UserService {
     constructor() {
-        this.repsitories = {
+        this.repositories = {
             users: new UsersRepository(),
         };
     }
 
-    async createUser(body) {
-        const user = await this.repsitories.users.createUser(body);
+    async createUserServ(body) {
+        const user = await this.repositories.users.createUserRep(body);
         return user;
     }
 
     async findUserByEmail(email) {
-        const user = await this.repsitories.users.findUserByEmail(email);
+        const user = await this.repositories.users.findUserByEmail(email);
         return user;
     }
 
     async findUserById(id) {
-        const user = await this.repsitories.users.findUserById(id);
+        const user = await this.repositories.users.findUserById(id);
         return user;
+    }
+
+    async updateUser(id, body) {
+        const data = await this.repositories.users.updateUser(id, body);
+        return data;
     }
 }
 

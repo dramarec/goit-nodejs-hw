@@ -12,18 +12,8 @@ router
     .get('/', guard, controllerContacts.getAllContactsCntrl)
     .get('/:contactId', guard, controllerContacts.getContactById)
     .post('/', guard, validateCreateContact, controllerContacts.createContact)
-    .put(
-        '/:contactId',
-        guard,
-        validateUpdateContact,
-        controllerContacts.updateContact,
-    )
-    .patch(
-        '/:contactId/status',
-        guard,
-        validateUpdateStatusContact,
-        controllerContacts.updateContactStatus,
-    )
+    .put('/:contactId', guard, validateUpdateContact, controllerContacts.updateContact)
+    .patch('/:contactId/favorite', guard, validateUpdateStatusContact, controllerContacts.updateContactStatus)
     .delete('/:contactId', guard, controllerContacts.removeContact);
 
 module.exports = router;

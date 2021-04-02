@@ -2,11 +2,9 @@ const express = require('express');
 const router = express.Router();
 const controllerUsers = require('../../controllers/usersCntrl');
 const guard = require('../../helpers/guard');
-const { createAccountLimiter } = require('../../helpers/rateLimit');
+const { validateUpdateUser } = require('../../validation/usersVldt');
 
-router
-    .post('/registration', createAccountLimiter, controllerUsers.registration)
-    .post('/login', controllerUsers.login)
-    .post('/logout', guard, controllerUsers.logout);
+router.get('/current', guard, controllerUsers.getCurrentUser);
+router.patch('/update', guard, validateUpdateUser, controllerUsers.updateUser);
 
 module.exports = router;

@@ -4,32 +4,32 @@ const serviceUser = new UserService();
 const serviceAuth = new AuthService();
 
 const registration = async (req, res, next) => {
-    console.log('req.body :', req.body);
-    const { name, email, password, subscriptions } = req.body;
+    const { name, email, password, subscription } = req.body;
+
     const user = await serviceUser.findUserByEmail(email);
+
     if (user) {
         return next({
-            status: 'error',
-            code: HttpCode.CONFLICT,
+            status: HttpCode.CONFLICT,
             data: 'Conflict',
             message: 'This email is already use',
         });
     }
+
     try {
-        const newUser = await serviceUser.createUser({
+        const newUser = await serviceUser.createUserServ({
             name,
             email,
             password,
-            subscriptions,
+            subscription,
         });
-
         return res.status(HttpCode.CREATED).json({
-            status: 'success',
             code: HttpCode.CREATED,
             data: {
-                id: newUser.id,
+                name: newUser.name,
                 email: newUser.email,
-                subscriptions: newUser.subscriptions,
+                subscription: newUser.subscription,
+                id: newUser.id,
             },
         });
     } catch (err) {
@@ -39,21 +39,26 @@ const registration = async (req, res, next) => {
 
 const login = async (req, res, next) => {
     const { email, password } = req.body;
+
     try {
-        const token = await serviceAuth.login({ email, password });
-        if (token) {
+        const result = await serviceAuth.loginAuthService({ email, password });
+        if (result) {
             return res.status(HttpCode.OK).json({
                 status: 'success',
                 code: HttpCode.OK,
                 data: {
-                    token,
+                    token: result.token,
+                    user: {
+                        name: result.name,
+                        email: result.email,
+                        subscription: result.subscription,
+                    },
                 },
             });
         }
         next({
-            status: 'error',
-            code: HttpCode.UNAUTHORIZED,
-            message: 'Invalid creadentials',
+            status: HttpCode.UNAUTHORIZED,
+            message: 'Email or password is wrong',
         });
     } catch (err) {
         next(err);
@@ -62,11 +67,53 @@ const login = async (req, res, next) => {
 
 const logout = async (req, res, next) => {
     const id = req.user.id;
-    await serviceAuth.logout(id);
-    return res.status(HttpCode.NO_CONTENT).json({
-        status: 'success',
+    await serviceAuth.logoutAuthService(id);
+    return res.status(HttpCode.OK).json({
+        status: 'No Content',
         code: HttpCode.NO_CONTENT,
+        message: 'Logout',
     });
 };
 
-module.exports = { registration, login, logout };
+const getCurrentUser = async (req, res, next) => {
+    try {
+        const user = req.user;
+        return res.status(HttpCode.OK).json({
+            status: 'success',
+            code: HttpCode.OK,
+            data: {
+                user: {
+                    name: user.name,
+                    email: user.email,
+                    subscription: user.subscription,
+                },
+            },
+        });
+    } catch (err) {
+        next(err);
+    }
+};
+
+const updateUser = async (req, res, next) => {
+    const id = req.user.id;
+    const user = await serviceUser.updateUser(id, req.body);
+    return res.status(HttpCode.OK).json({
+        status: 'success',
+        code: HttpCode.OK,
+        data: {
+            user: {
+                name: user.name,
+                email: user.email,
+                subscription: user.subscription,
+            },
+        },
+    });
+};
+
+module.exports = {
+    registration,
+    login,
+    logout,
+    getCurrentUser,
+    updateUser,
+};

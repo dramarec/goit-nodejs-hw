@@ -10,7 +10,7 @@ class UsersRepository {
         return result;
     }
 
-    async createUser(body) {
+    async createUserRep(body) {
         const user = new this.model(body);
         return user.save();
     }
@@ -21,6 +21,11 @@ class UsersRepository {
 
     async findUserById(id) {
         const result = await this.model.findOne({ _id: id });
+        return result;
+    }
+
+    async updateUser(id, body) {
+        const result = await this.model.findByIdAndUpdate({ _id: id }, { ...body }, { new: true });
         return result;
     }
 }

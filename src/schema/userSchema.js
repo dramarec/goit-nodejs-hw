@@ -5,7 +5,25 @@ const { Schema } = mongoose;
 
 const userSchema = new Schema(
     {
-        subscriptions: {
+        name: {
+            type: String,
+            default: 'Guest',
+            minlength: 2,
+        },
+
+        email: {
+            type: String,
+            required: [true, 'Email is required'],
+            unique: true,
+            validate: {
+                validator: function (v) {
+                    const reg = /^\S+@\S+\.\S+/;
+                    return reg.test(String(v).toLowerCase());
+                },
+                message: props => `${props.value} is not a valid email!`,
+            },
+        },
+        subscription: {
             type: String,
             enum: {
                 values: ['free', 'pro', 'premium'],
@@ -13,12 +31,6 @@ const userSchema = new Schema(
             },
             default: 'free',
         },
-        name: {
-            type: String,
-            default: 'Guest',
-            minlength: 2,
-        },
-
         password: {
             type: String,
             required: [true, 'Password is required'],
@@ -29,32 +41,21 @@ const userSchema = new Schema(
             type: String,
             default: null,
         },
-        email: {
-            type: String,
-            required: [true, 'Email is required'],
-            unique: true,
-            // //* вариант валидации email:
-            // validate(value) {
-            //     const reg = /\S+@\S+\.\S+/;
-            //     return reg.test(String(value).toLowerCase());
-            // },
-        },
     },
     { versionKey: false, timestamps: true },
 );
 // //? более правельный вариант валидации email:
-userSchema.path('email').validate(function (value) {
-    const reg = /^\S+@\S+\.\S+/;
-    return reg.test(String(value).toLowerCase());
-});
+// userSchema.path('email').validate(function (value) {
+//     const reg = /^\S+@\S+\.\S+/;
+//     return reg.test(String(value).toLowerCase());
+// });
 
 // Шифруем пароль перед сохранением:
 userSchema.pre('save', async function (next) {
-    if (!this.isModified('password')) return next();
-    this.password = await bcrypt.hash(
-        this.password,
-        bcrypt.genSaltSync(SALT_FACTOR),
-    );
+    if (!this.isModified('password')) {
+        return next();
+    }
+    this.password = await bcrypt.hash(this.password, bcrypt.genSaltSync(SALT_FACTOR));
     next();
 });
 // //* или:

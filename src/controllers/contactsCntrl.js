@@ -6,11 +6,8 @@ const contactsService = new ContactsService();
 const getAllContactsCntrl = async (req, res, next) => {
     try {
         const userId = req.user.id;
-        console.log('getAllContactsCntrl req.query :', req.query);
-        const contacts = await contactsService.getAllContactsSrv(
-            userId,
-            req.query,
-        );
+        // console.log('getAllContactsCntrl -> req.query ===>:', req.query);
+        const contacts = await contactsService.getAllContactsSrv(userId, req.query);
         res.status(HttpCode.OK).json({
             status: 'success',
             code: HttpCode.OK,
@@ -20,13 +17,11 @@ const getAllContactsCntrl = async (req, res, next) => {
         next(err);
     }
 };
+
 const getContactById = async (req, res, next) => {
     try {
         const userId = req.user.id;
-        const contact = await contactsService.getContactById(
-            userId,
-            req.params,
-        );
+        const contact = await contactsService.getContactById(userId, req.params);
         // console.log('req.params :', req.params);
         if (contact) {
             return res.status(HttpCode.OK).json({
@@ -45,6 +40,7 @@ const getContactById = async (req, res, next) => {
         next(err);
     }
 };
+
 const createContact = async (req, res, next) => {
     try {
         const userId = req.user.id;
@@ -58,14 +54,11 @@ const createContact = async (req, res, next) => {
         next(err);
     }
 };
+
 const updateContact = async (req, res, next) => {
     try {
         const userId = req.user.id;
-        const contact = await contactsService.updateContact(
-            userId,
-            req.params,
-            req.body,
-        );
+        const contact = await contactsService.updateContact(userId, req.params, req.body);
         if (contact) {
             return res.status(HttpCode.OK).json({
                 status: 'success',
@@ -83,14 +76,11 @@ const updateContact = async (req, res, next) => {
         next(err);
     }
 };
+
 const updateContactStatus = async (req, res, next) => {
     try {
         const userId = req.user.id;
-        const contact = await contactsService.updateContact(
-            userId,
-            req.params,
-            req.body,
-        );
+        const contact = await contactsService.updateContact(userId, req.params, req.body);
         if (contact) {
             return res.status(HttpCode.OK).json({
                 status: 'success',
@@ -108,6 +98,7 @@ const updateContactStatus = async (req, res, next) => {
         next(err);
     }
 };
+
 const removeContact = async (req, res, next) => {
     try {
         const userId = req.user.id;

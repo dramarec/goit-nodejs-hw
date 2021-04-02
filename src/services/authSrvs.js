@@ -10,21 +10,30 @@ class AuthService {
         };
     }
 
-    async login({ email, password }) {
+    async loginAuthService({ email, password }) {
         const user = await this.repsitories.users.findUserByEmail(email);
         if (!user || !user.validPassword(password)) {
             return null;
         }
         const id = user.id;
         const payload = { id };
+
         const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '10h' });
+
         await this.repsitories.users.updateToken(id, token);
-        return token;
+
+        const data = {
+            name: user.name,
+            email: user.email,
+            subscription: user.subscription,
+            token,
+        };
+        return data;
     }
 
-    async logout(id) {
-        const user = await this.repsitories.users.updateToken(id, null);
-        return user;
+    async logoutAuthService(id) {
+        const loguser = await this.repsitories.users.updateToken(id);
+        return loguser;
     }
 }
 

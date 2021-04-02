@@ -9,13 +9,13 @@ const HttpCode = {
     CONFLICT: 409,
     INTERNAL_SERVER_ERROR: 500,
 };
-const Subscriptions = {
-    free: 'free',
-    pro: 'pro',
-    premium: 'premium',
+const Subscription = {
+    FREE: 'free',
+    PRO: 'pro',
+    PREMIUM: 'premium',
 };
 
 module.exports = {
     HttpCode,
-    Subscriptions,
+    Subscription,
 };

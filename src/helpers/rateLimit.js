@@ -8,8 +8,7 @@ const createAccountLimiter = rateLimit({
         res.status(HttpCode.BAD_REQUEST).json({
             status: 'error',
             code: HttpCode.BAD_REQUEST,
-            message:
-                'С вашего IP исчерпан лимит создания акаунтов за один час. Попробуйте позже',
+            message: 'С вашего IP исчерпан лимит создания акаунтов за один час. Попробуйте позже',
         });
     },
 });
