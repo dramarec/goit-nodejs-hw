@@ -27,7 +27,7 @@ app.use(
     rateLimit({
         windowMs: apiLimit.windowMs, // 15 minutes
         max: apiLimit.max, // limit each IP to 100 requests per windowMs
-        handler: (_, _, next) => {
+        handler: (req, res, next) => {
             next(
                 new ErrorHandler(
                     HttpCode.BAD_REQUEST,
