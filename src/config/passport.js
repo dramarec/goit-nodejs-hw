@@ -33,3 +33,33 @@ passport.use(
         }
     }),
 );
+
+// const passport = require("passport");
+
+// const { ExtractJWT, Strategy } = require("passport-jwt");
+
+// const User = require("../schemas/user");
+
+// require("dotenv").config();
+// const secret = process.env.JWT_SECRET_KEY;
+
+// const params = {
+//     secretOrKey: secret,
+//     jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
+// };
+
+// // JWT Strategy
+// passport.use(
+//     new Strategy(params, function (payload, done) {
+//         console.log('passport.js => newStrategy => payload =>', payload);
+
+//         User.find({ _id: payload.id })
+//             .then(([user]) => {
+//                 if (!user) {
+//                     return done(new Error("User not found"));
+//                 }
+//                 return done(null, user);
+//             })
+//             .catch((err) => done(err));
+//     })
+// );

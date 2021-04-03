@@ -1,12 +1,12 @@
 const { AuthService, UserService } = require('../services');
 const { HttpCode } = require('../helpers/constants');
-const serviceUser = new UserService();
-const serviceAuth = new AuthService();
+const userSrvs = new UserService();
+const authSrvs = new AuthService();
 
 const registration = async (req, res, next) => {
     const { name, email, password, subscription } = req.body;
 
-    const user = await serviceUser.findUserByEmail(email);
+    const user = await userSrvs.findUserByEmail(email);
 
     if (user) {
         return next({
@@ -17,7 +17,7 @@ const registration = async (req, res, next) => {
     }
 
     try {
-        const newUser = await serviceUser.createUserServ({
+        const newUser = await userSrvs.createUserServ({
             name,
             email,
             password,
@@ -41,7 +41,7 @@ const login = async (req, res, next) => {
     const { email, password } = req.body;
 
     try {
-        const result = await serviceAuth.loginAuthService({ email, password });
+        const result = await authSrvs.loginAuthService({ email, password });
         if (result) {
             return res.status(HttpCode.OK).json({
                 status: 'success',
@@ -67,7 +67,7 @@ const login = async (req, res, next) => {
 
 const logout = async (req, res, next) => {
     const id = req.user.id;
-    await serviceAuth.logoutAuthService(id);
+    await authSrvs.logoutAuthService(id);
     return res.status(HttpCode.OK).json({
         status: 'No Content',
         code: HttpCode.NO_CONTENT,
@@ -96,7 +96,7 @@ const getCurrentUser = async (req, res, next) => {
 
 const updateUser = async (req, res, next) => {
     const id = req.user.id;
-    const user = await serviceUser.updateUser(id, req.body);
+    const user = await userSrvs.updateUser(id, req.body);
     return res.status(HttpCode.OK).json({
         status: 'success',
         code: HttpCode.OK,
