@@ -2,17 +2,21 @@ const Joi = require('joi');
 const { HttpCode } = require('../helpers/constants');
 
 const schemaCreateContact = Joi.object({
-    name: Joi.string().alphanum().min(3).max(30).required(),
+    name: Joi.string().alphanum().min(3).max(30).required().messages({
+        'string.base': '"username" should be a type of \'text\'',
+        'string.empty': '"username" cannot be an empty field',
+        'string.min': '"username" should have a minimum length of {#limit}',
+        'string.max': '"username" should have a maximum length of {#limit}',
+        'any.required': '"username" is a required field',
+    }),
     email: Joi.string()
         .email({
             minDomainSegments: 2,
+            tlds: { allow: ['com', 'net', 'ua', 'ru'] },
         })
         .required(),
     phone: Joi.string().min(7).max(20).required(),
-    password: Joi.string().min(7).max(20).required(),
-    subscriptions: Joi.string().min(3).max(10).optional(),
-    token: Joi.string().optional(),
-    done: Joi.boolean().optional(),
+    favorite: Joi.boolean().optional(),
 });
 
 const schemaUpdateContact = Joi.object({
@@ -20,16 +24,16 @@ const schemaUpdateContact = Joi.object({
     email: Joi.string()
         .email({
             minDomainSegments: 2,
+            tlds: { allow: ['com', 'net', 'ua', 'ru'] },
         })
         .optional(),
     phone: Joi.string().min(7).max(20).optional(),
-    password: Joi.string().min(7).max(20).required(),
-    subscriptions: Joi.string().min(3).max(10).optional(),
-    token: Joi.string().optional(),
-    done: Joi.boolean().optional(),
+    favorite: Joi.boolean().optional(),
 });
 const schemaStatusContact = Joi.object({
-    done: Joi.boolean().required(),
+    favorite: Joi.boolean().required().messages({
+        'any.required': 'missing field favorite',
+    }),
 });
 
 const validate = (schema, body, next) => {

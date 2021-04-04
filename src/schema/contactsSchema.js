@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
-const { Schema } = mongoose;
+const { Schema, model } = mongoose;
+const mongoosePaginate = require('mongoose-paginate-v2');
 
-const contactSchema = new Schema(
+const contactSchema = Schema(
     {
         name: {
             type: String,
@@ -19,40 +20,25 @@ const contactSchema = new Schema(
             required: [true, 'User phone number required'],
             validate: {
                 validator: function (v) {
-                    return /^\(?[0][0-9]{2}\)?[\s-]?[0-9]{3}[\s-]?[0-9]{2}[\s-]?[0-9]{2}$/.test(
-                        v,
-                    );
+                    return /^\(?[0][0-9]{2}\)?[\s-]?[0-9]{3}[\s-]?[0-9]{2}[\s-]?[0-9]{2}$/.test(v);
                 },
                 message: props => `${props.value}! Please try (044)123-45-67`,
             },
             unique: true,
         },
-        subscriptions: {
-            type: String,
-            required: [true, 'Subscription is required'],
-            minlength: 3,
-            maxlength: 8,
-            enum: ['free', 'pro', 'premium'],
-            default: 'free',
-        },
-        password: {
-            type: String,
-            required: [true, 'Password is required'],
-            minlength: 6,
-            maxlength: 20,
-        },
-        token: {
-            type: String,
-            default: '',
-        },
-        done: {
+        favorite: {
             type: Boolean,
             default: false,
+        },
+        owner: {
+            type: mongoose.SchemaTypes.ObjectId,
+            ref: 'user',
         },
     },
     { versionKey: false, timestamps: true },
 );
+contactSchema.plugin(mongoosePaginate);
 
-const Contact = mongoose.model('contact', contactSchema);
+const Contact = model('contact', contactSchema);
 
 module.exports = Contact;

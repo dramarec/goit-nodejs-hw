@@ -1,16 +1,42 @@
 const express = require('express');
 const logger = require('morgan');
 const cors = require('cors');
+
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
+
+const { ErrorHandler } = require('./helpers/errorHandler');
 const { HttpCode } = require('./helpers/constants');
 const routerContacts = require('./api/contacts');
-const app = express();
-const formatsLogger = app.get('env') === 'development' ? 'dev' : 'short';
+const routerUsers = require('./api/users');
+const routerAuth = require('./api/auth');
+const { apiLimit, jsonLimit } = require('./config/rateLimit.json');
 
+const app = express();
+
+const formatsLogger = app.get('env') === 'development' ? 'dev' : 'short';
 app.use(logger(formatsLogger));
+
+app.use(helmet());
+
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: jsonLimit }));
+
+// only apply to requests that begin with /api/
+app.use(
+    '/api/',
+    rateLimit({
+        windowMs: apiLimit.windowMs, // 15 minutes
+        max: apiLimit.max, // limit each IP to 100 requests per windowMs
+        handler: (req, res, next) => {
+            next(new ErrorHandler(HttpCode.BAD_REQUEST, 'Вы исчерпали количество запросов за 15 минут'));
+        },
+    }),
+);
 
 app.use('/api/contacts', routerContacts);
+app.use('/api/users', routerUsers);
+app.use('/api/auth', routerAuth);
 
 app.use((req, res, next) => {
     res.status(HttpCode.NOT_FOUND).json({
@@ -26,7 +52,7 @@ app.use((err, req, res, next) => {
     res.status(err.status).json({
         status: err.status === 500 ? 'fail' : 'error',
         code: err.status,
-        message: err.message,
+        message: `${err.message.replace(/"/g, '')}`,
         data: err.status === 500 ? 'Internal Server Error' : err.data,
     });
 });
