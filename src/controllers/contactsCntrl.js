@@ -6,7 +6,6 @@ const contactsService = new ContactsService();
 const getAllContactsCntrl = async (req, res, next) => {
     try {
         const userId = req.user.id;
-        // console.log('getAllContactsCntrl -> req.query ===>:', req.query);
         const contacts = await contactsService.getAllContactsSrv(userId, req.query);
         res.status(HttpCode.OK).json({
             status: 'success',
@@ -22,7 +21,6 @@ const getContactById = async (req, res, next) => {
     try {
         const userId = req.user.id;
         const contact = await contactsService.getContactById(userId, req.params);
-        // console.log('req.params :', req.params);
         if (contact) {
             return res.status(HttpCode.OK).json({
                 status: 'success',

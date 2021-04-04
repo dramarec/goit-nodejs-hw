@@ -14,12 +14,12 @@ const params = {
 
 passport.use(
     new Strategy(params, async (payload, done) => {
-        // console.log('passport.js => newStrategy => payload =>', payload);
+        console.log('passport.js => newStrategy => payload =>', payload);
 
         try {
             const service = new UserService();
             const user = await service.findUserById(payload.id);
-            // console.log('passport.js => newStrategy => user =>', user);
+            console.log('passport.js => newStrategy => user =>', user);
 
             if (!user) {
                 return done(new Error('User not found'));
@@ -33,33 +33,3 @@ passport.use(
         }
     }),
 );
-
-// const passport = require("passport");
-
-// const { ExtractJWT, Strategy } = require("passport-jwt");
-
-// const User = require("../schemas/user");
-
-// require("dotenv").config();
-// const secret = process.env.JWT_SECRET_KEY;
-
-// const params = {
-//     secretOrKey: secret,
-//     jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
-// };
-
-// // JWT Strategy
-// passport.use(
-//     new Strategy(params, function (payload, done) {
-//         console.log('passport.js => newStrategy => payload =>', payload);
-
-//         User.find({ _id: payload.id })
-//             .then(([user]) => {
-//                 if (!user) {
-//                     return done(new Error("User not found"));
-//                 }
-//                 return done(null, user);
-//             })
-//             .catch((err) => done(err));
-//     })
-// );

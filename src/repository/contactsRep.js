@@ -5,45 +5,23 @@ class ContactsRepository {
     }
 
     async getAllContactsRep(userId, { limit = 5, page = 1, sortBy, sortByDesc, filter, favorite }) {
-        if (!favorite) {
-            const result = await this.model.paginate(
-                { owner: userId },
-                {
-                    limit,
-                    page,
-                    favorite,
-                    sort: {
-                        ...(sortBy ? { [`${sortBy}`]: 1 } : {}),
-                        ...(sortByDesc ? { [`${sortByDesc}`]: -1 } : {}),
-                    },
-                    select: filter ? filter.split('|').join(' ') : '',
-                    populate: {
-                        path: 'owner',
-                        select: 'name email subscription -_id',
-                    },
-                },
-            );
-            return result;
-        } else {
-            const result = await this.model.paginate(
-                { favorite, owner: userId },
-                {
-                    limit,
-                    page,
-                    favorite,
-                    sort: {
-                        ...(sortBy ? { [`${sortBy}`]: 1 } : {}),
-                        ...(sortByDesc ? { [`${sortByDesc}`]: -1 } : {}),
-                    },
-                    select: filter ? filter.split('|').join(' ') : '',
-                    populate: {
-                        path: 'owner',
-                        select: 'name email subscription -_id',
-                    },
-                },
-            );
-            return result;
-        }
+        const params = {
+            limit,
+            page,
+            favorite,
+            sort: {
+                ...(sortBy ? { [`${sortBy}`]: 1 } : {}),
+                ...(sortByDesc ? { [`${sortByDesc}`]: -1 } : {}),
+            },
+            select: filter ? filter.split('|').join(' ') : '',
+            populate: {
+                path: 'owner',
+                select: 'name email subscription -_id',
+            },
+        };
+        const query = favorite ? { owner: userId, favorite } : { owner: userId };
+        const result = await Contact.paginate(query, params);
+        return result;
     }
 
     async getContactById(userId, id) {
@@ -74,3 +52,45 @@ class ContactsRepository {
 }
 
 module.exports = ContactsRepository;
+
+// async getAllContactsRep(userId, { limit = 5, page = 1, sortBy, sortByDesc, filter, favorite }) {
+//     if (!favorite) {
+//         const result = await this.model.paginate(
+//             { owner: userId },
+//             {
+//                 limit,
+//                 page,
+//                 favorite,
+//                 sort: {
+//                     ...(sortBy ? { [`${sortBy}`]: 1 } : {}),
+//                     ...(sortByDesc ? { [`${sortByDesc}`]: -1 } : {}),
+//                 },
+//                 select: filter ? filter.split('|').join(' ') : '',
+//                 populate: {
+//                     path: 'owner',
+//                     select: 'name email subscription -_id',
+//                 },
+//             },
+//         );
+//         return result;
+//     } else {
+//         const result = await this.model.paginate(
+//             { favorite, owner: userId },
+//             {
+//                 limit,
+//                 page,
+//                 favorite,
+//                 sort: {
+//                     ...(sortBy ? { [`${sortBy}`]: 1 } : {}),
+//                     ...(sortByDesc ? { [`${sortByDesc}`]: -1 } : {}),
+//                 },
+//                 select: filter ? filter.split('|').join(' ') : '',
+//                 populate: {
+//                     path: 'owner',
+//                     select: 'name email subscription -_id',
+//                 },
+//             },
+//         );
+//         return result;
+//     }
+// }
