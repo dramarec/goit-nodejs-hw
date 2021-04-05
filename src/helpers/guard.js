@@ -7,7 +7,8 @@ const guard = (req, res, next) => {
         if (err || !user) {
             return next({
                 status: HttpCode.FORBIDDEN,
-                message: 'Forbidden',
+                data: 'Not authorized',
+                message: 'Access is denied',
             });
         }
         req.user = user;
