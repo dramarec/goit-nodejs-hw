@@ -14,12 +14,12 @@ const params = {
 
 passport.use(
     new Strategy(params, async (payload, done) => {
-        console.log('passport.js => newStrategy => payload =>', payload);
+        // console.log('passport.js => newStrategy => payload =>', payload);
 
         try {
             const service = new UserService();
             const user = await service.findUserById(payload.id);
-            console.log('passport.js => newStrategy => user =>', user);
+            // console.log('passport.js => newStrategy => user =>', user);
 
             if (!user) {
                 return done(new Error('User not found'));

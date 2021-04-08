@@ -28,6 +28,15 @@ class UsersRepository {
         const result = await this.model.findOne({ _id: id });
         return result;
     }
+
+    async updateAvatarRep(id, avatar, idCloudAvatar) {
+        await this.model.updateOne({ _id: id }, { avatar, idCloudAvatar });
+    }
+
+    async getAvatarRep(id) {
+        const { avatar, idCloudAvatar } = await this.model.findOne({ _id: id });
+        return { avatar, idCloudAvatar };
+    }
 }
 
 module.exports = UsersRepository;

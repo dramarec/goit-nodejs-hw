@@ -3,10 +3,8 @@ const { HttpCode } = require('../helpers/constants');
 const userSrvs = new UserService();
 
 const registration = async (req, res, next) => {
-    const { name, email, password, subscription } = req.body;
-
+    const { email } = req.body;
     const user = await userSrvs.findUserByEmailServ(email);
-
     if (user) {
         return next({
             status: HttpCode.CONFLICT,
@@ -16,17 +14,14 @@ const registration = async (req, res, next) => {
     }
 
     try {
-        const newUser = await userSrvs.createUserServ({
-            name,
-            email,
-            subscription,
-        });
+        const newUser = await userSrvs.createUserServ(req.body);
         return res.status(HttpCode.CREATED).json({
             code: HttpCode.CREATED,
             data: {
                 name: newUser.name,
                 email: newUser.email,
                 subscription: newUser.subscription,
+                avatar: newUser.avatar,
                 id: newUser.id,
             },
         });
@@ -49,6 +44,7 @@ const login = async (req, res, next) => {
                     user: {
                         name: result.name,
                         email: result.email,
+                        avatar: result.avatar,
                         subscription: result.subscription,
                     },
                 },
@@ -83,6 +79,7 @@ const getCurrentUser = async (req, res, next) => {
                 user: {
                     name: user.name,
                     email: user.email,
+                    avatar: user.avatar,
                     subscription: user.subscription,
                 },
             },
@@ -108,10 +105,24 @@ const updateUser = async (req, res, next) => {
     });
 };
 
+const avatars = async (req, res, next) => {
+    const id = req.user.id;
+    const pathFile = req.file.path;
+
+    const url = await userSrvs.updateAvatar(id, pathFile);
+
+    return res.status(HttpCode.OK).json({
+        status: 'success',
+        code: HttpCode.OK,
+        avatarUrl: url,
+    });
+};
+
 module.exports = {
     registration,
     login,
     logout,
     getCurrentUser,
     updateUser,
+    avatars,
 };

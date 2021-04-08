@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const SALT_FACTOR = 6;
 const { Schema, model } = mongoose;
+const gravatar = require('gravatar');
 
 const userSchema = Schema(
     {
@@ -41,6 +42,16 @@ const userSchema = Schema(
             type: String,
             default: null,
         },
+        avatar: {
+            type: String,
+            default: function () {
+                return gravatar.url(this.email, { s: '250' }, true);
+            },
+        },
+        idCloudAvatar: {
+            type: String,
+            default: null,
+        },
     },
     { versionKey: false, timestamps: true },
 );
@@ -60,10 +71,7 @@ userSchema.pre('save', async function (next) {
 });
 // //* или:
 // userSchema.methods.setPassword = async function (password) {
-//     this.password = await bcrypt.hashSync(
-//         password,
-//         bcrypt.genSaltSync(SALT_FACTOR),
-//     );
+//     this.password = await bcrypt.hashSync(password, bcrypt.genSaltSync(SALT_FACTOR));
 // };
 
 // Валидация пароля:
