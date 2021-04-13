@@ -29,6 +29,11 @@ class UsersRepository {
         return result;
     }
 
+    async findByField(field) {
+        const result = await this.model.findOne(field);
+        return result;
+    }
+
     async updateAvatarRep(id, avatar, idCloudAvatar) {
         await this.model.updateOne({ _id: id }, { avatar, idCloudAvatar });
     }
@@ -36,6 +41,11 @@ class UsersRepository {
     async getAvatarRep(id) {
         const { avatar, idCloudAvatar } = await this.model.findOne({ _id: id });
         return { avatar, idCloudAvatar };
+    }
+
+    async getCurrentUser(id) {
+        const user = await this.model.findOne({ _id: id } /* , '_id name email sex avatar createdAt' */);
+        return user;
     }
 }
 

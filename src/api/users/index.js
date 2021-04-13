@@ -5,8 +5,10 @@ const guard = require('../../helpers/guard');
 const { validateUpdateUser } = require('../../validation/usersVldt');
 const upload = require('../../helpers/multer');
 
-router.get('/current', guard, usersCntrl.getCurrentUser);
-router.patch('/update', guard, validateUpdateUser, usersCntrl.updateUser);
-router.patch('/avatars', guard, upload.single('avatar'), usersCntrl.avatars);
+router
+    .get('/current', guard, usersCntrl.getCurrentUser)
+    .patch('/update', guard, validateUpdateUser, usersCntrl.updateUser)
+    .patch('/avatars', guard, upload.single('avatar'), usersCntrl.avatars)
+    .get('/verify/:token', usersCntrl.verify);
 
 module.exports = router;

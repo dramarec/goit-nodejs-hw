@@ -1,9 +1,11 @@
-const { UsersRepository } = require('../repository');
-const jwt = require('jsonwebtoken');
-require('dotenv').config();
-const cloudinary = require('cloudinary').v2;
 const fs = require('fs/promises');
+const jwt = require('jsonwebtoken');
+const cloudinary = require('cloudinary').v2;
+const EmailService = require('./emailSrvs');
 const { ErrorHandler } = require('../helpers/errorHandler');
+const { UsersRepository } = require('../repository');
+const { nanoid } = require('nanoid');
+require('dotenv').config();
 
 class UserService {
     constructor() {
@@ -16,6 +18,7 @@ class UserService {
         this.repositories = {
             users: new UsersRepository(),
         };
+        this.emailService = new EmailService();
     }
 
     async findUserByEmailServ(email) {
@@ -24,21 +27,37 @@ class UserService {
     }
 
     async createUserServ(body) {
-        const user = await this.repositories.users.createUserRep(body);
+        const verifyToken = nanoid();
+        const { email, name } = body;
+        try {
+            await this.emailService.sendEmail(verifyToken, email, name);
+        } catch (e) {
+            throw new ErrorHandler(503, e.message, 'Service Unavailable');
+        }
+
+        const user = await this.repositories.users.createUserRep({ ...body, verifyToken });
         return user;
     }
 
     async loginAuthService({ email, password }) {
         const user = await this.repositories.users.findUserByEmailRep(email);
-        if (!user || !user.validPassword(password)) {
+
+        if (!user || !user.validPassword(password) || user.isVerify) {
             return null;
         }
+        console.log('UserService ===> loginAuthService ===> user', user);
+        // const payload = { id: user._id };
+
         const id = user.id;
         const payload = { id };
+        const verify = user.isVerify;
+        console.log('login ===> verify', verify);
 
         const token = jwt.sign(payload, process.env.JWT_SECRET_KEY, { expiresIn: '10h' });
+        console.log('UserService ===> loginAuthService ===> token', token);
 
-        await this.repositories.users.updateTokenRep(id, token);
+        const updatedUser = await this.repositories.users.updateTokenRep(id, token);
+        console.log('UserService ===> loginAuthService ===> updatedUser', updatedUser);
 
         const data = {
             name: user.name,
@@ -62,6 +81,22 @@ class UserService {
     async findUserById(id) {
         const user = await this.repositories.users.findUserByIdRep(id);
         return user;
+    }
+
+    async getCurrentUser(id) {
+        const data = await this.repositories.users.getCurrentUser(id);
+        return data;
+    }
+
+    async verify({ token }) {
+        const user = await this.repositories.users.findByField({
+            verifyToken: token,
+        });
+        if (user) {
+            await user.updateOne({ verify: true, verifyToken: null }); // this.repo...
+            return true;
+        }
+        return false;
     }
 
     async updateAvatar(id, pathFile) {
